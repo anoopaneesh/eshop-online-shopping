@@ -1,0 +1,29 @@
+<div class="container">
+    <table class="timetable_sub">
+					<thead>
+						<tr>
+							<th>SL No.</th>	
+							<th>Product</th>
+							<th>Quantity</th>
+							<th>Product Name</th>
+							<th>Price per item</th>
+						</tr>
+					</thead>
+                    {{#each details}}
+                    {{#each item}}
+					<tr class="rem1">
+						<td class="invert">{{@index}}</td>
+						<td class="invert-image"><a href="#"><img src="/images/{{this.product._id}}.jpg" alt=" " class="img-responsive" /></a></td>
+						<td class="invert">
+                            {{this.quantity}}
+						</td>
+						<td class="invert">{{this.product.name}}</td>
+						<td class="invert">{{this.product.price}}</td>
+					</tr>
+                    {{/each}}
+                    {{/each}}
+				</table>
+                {{#each details}}
+                <h3 style="float: right;margin-top:50px;margin-bottom:50px;">Total Rs.{{this.total}}</h3>
+                {{/each}}
+</div>

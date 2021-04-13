@@ -1,0 +1,25 @@
+<section>
+    <div class="container py-4">
+        <h2 class='text-center'>Add Product</h2>
+        <form class='mt-5' action='/admin/add-product' method='post' enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="pname">Name</label>
+                <input type="text" name="name" class="form-control" aria-describedby="product-name" placeholder="Enter name" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="pprice">Price</label>
+                <input type="number" name="price" class="form-control" aria-describedby="product-price" placeholder="Enter price" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="pdesc">Description</label>
+                <input type="text" name="description" class="form-control" aria-describedby="product-description" autocomplete="off"
+                    placeholder="Enter description">
+            </div>
+            <div class="form-group">
+                <label for="pimage">Product image</label>
+                <input type="file" name="image" class="form-control-file">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Product</button>
+        </form>
+    </div>
+</section>

@@ -1,0 +1,32 @@
+<!-- breadcrumbs -->
+	<div class="breadcrumbs">
+		<div class="container">
+			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+				<li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Admin</a></li>
+				<li class="active">Login Page</li>
+			</ol>
+		</div>
+	</div>
+<!-- //breadcrumbs -->
+<!-- login -->
+	<div class="login">
+		<div class="container">
+			<h3 class="animated wow zoomIn" data-wow-delay=".5s">Admin Login</h3>
+			<p class="est animated wow zoomIn" data-wow-delay=".5s">Login to add,remove or edit products and to ship orders</p>
+			<div class="login-form-grids animated wow slideInUp" data-wow-delay=".5s">
+				<form action='/admin/login' method='post'>
+					<input type="email" name="email" placeholder="Email Address" required>
+					<input type="password" name="password" placeholder="Password" required>
+					<div class="forgot">
+						<a href="#">Forgot Password?</a>
+					</div>
+                    {{#if loginErr}}
+                    <p style="color:red;">{{loginErr}}</p>
+                    {{/if}}
+					<input type="submit" value="Login">
+				</form>
+			</div>
+		</div>
+	</div>
+<!-- //login -->
+

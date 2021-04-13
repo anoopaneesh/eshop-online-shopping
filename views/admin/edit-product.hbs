@@ -1,0 +1,31 @@
+<section>
+    <div class="container py-4">
+        <h2 class='text-center'>Edit Product</h2>
+        <form class='mt-5' action='/admin/edit-product/{{product._id}}' method='post' enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" class="form-control" aria-describedby="product-name" placeholder="Enter name" autocomplete="off" value="{{product.name}}">
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" name="price" class="form-control" aria-describedby="product-price" placeholder="Enter price" autocomplete="off" value="{{product.price}}">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" name="description" class="form-control" aria-describedby="product-description" autocomplete="off"
+                    placeholder="Enter description" value="{{product.description}}">
+            </div>
+            <div class="form-group">
+                <label for="image">Product image</label>
+                <img style="width:100px;height:auto;object-fit:contain;" src="/images/{{product._id}}.jpg" alt="" id="imgView"/>
+                <input type="file" name="image" class="form-control-file" onChange="viewImage(event)">
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+</section>
+<script>
+    function viewImage(event){
+        document.getElementById("imgView").src = URL.createObjectURL(event.target.files[0])
+    }
+</script>

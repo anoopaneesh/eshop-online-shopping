@@ -1,0 +1,114 @@
+<div class="login-form-grids row">
+    <form id="place-order-form">
+        <div class="col-md-6">
+            <h5 class="animated wow slideInUp" data-wow-delay=".5s">Delivery information</h5>
+            <input type="text" name="address" placeholder="Address" required>
+            <input type="text" name="city" placeholder="City" required>
+            <input type="text" name="state" placeholder="State" required>
+            <input type="text" name="zip" placeholder="Zip code" required>
+            <input type="text" name="mobile" placeholder="Number" required>
+            <h4 class="text-center" style="margin-bottom: 20px;margin-top: 20px;">Choose payment method</h4>
+            <div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment-method" id="payment-method1" value="COD"
+                        checked>
+                    <label class="form-check-label" for="payment-method1">
+                        Cash on delivery
+                    </label>
+                </div>
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="radio" name="payment-method" id="payment-method2"
+                        value="Online">
+                    <label class="form-check-label" for="payment-method2">
+                        Online payment
+                    </label>
+                </div>
+            </div>
+            <input type="hidden" value="{{user._id}}" name="user">
+            <input type="submit" value="checkout">
+        </div>
+        <div class="col-md-6" style="border:1px solid #000;">
+            <div class="checkout-left">
+                <div class="checkout-left-basket animated wow slideInLeft" style="width:100%;" data-wow-delay=".5s">
+                    <ul>
+                        {{#each products}}
+                        <li>{{this.product.name}} <i>-</i> <span>{{this.product.price}} x {{this.quantity}} </span></li>
+                        {{/each}}
+                        <hr style="color:black;">
+                        <li style="color:black;">Total <i>-</i> <span>Rs.{{total}}</span></li>
+                        <hr style="color:black;">
+                    </ul>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+</div>
+</form>
+</div>
+<script>
+    let formObj =document.getElementById('place-order-form')
+    formObj.addEventListener('submit',async(e)=>{
+        e.preventDefault()
+        let formData = new FormData(formObj)
+        let result = await fetch('/place-order', {
+            method: 'POST',
+            body: formData,
+        })
+        let data = await result.json()
+        if (data) {
+            if (formData.get('payment-method') === 'COD') {
+                location.href = "/order-placed"
+            } else {
+                razorpayPayment(data)
+            }
+        }
+
+    })
+    async function verifyPayment(payment,order){
+        let res = await fetch('/verify-payment',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                payment,
+                order
+            })
+        })
+        let result = await res.json()
+        if(result.status){
+            location.href="/order-placed"
+        }else{
+            alert('Payment was not successfull')
+        }
+    }
+    function razorpayPayment(data) {
+        console.log(data)
+        var options = {
+            "key": "rzp_test_VXIgWcJTVLflZS", // Enter the Key ID generated from the Dashboard
+            "amount": data.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "EShop Online Shopping",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": data.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+                verifyPayment(response,data)
+            },
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9999999999"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open()
+    }
+    
+</script>

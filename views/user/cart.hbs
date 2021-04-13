@@ -1,0 +1,112 @@
+<!-- breadcrumbs -->
+	<div class="breadcrumbs">
+		<div class="container">
+			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+				<li><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+				<li class="active">Checkout Page</li>
+			</ol>
+		</div>
+	</div>
+<!-- //breadcrumbs -->
+<!-- checkout -->
+	<div class="checkout">
+		<div class="container">
+			<h3 class="animated wow slideInLeft" data-wow-delay=".5s">Your shopping cart contains: <span>{{proLength}} Products</span></h3>
+            <h3>Total <i>-</i> <span id="total-price" style="font-size:18px;">Rs.{{total}}</span></h3>
+			<div class="checkout-right animated wow slideInUp" data-wow-delay=".5s">
+				<table class="timetable_sub">
+					<thead>
+						<tr>
+							<th>SL No.</th>	
+							<th>Product</th>
+							<th>Quantity</th>
+							<th>Product Name</th>
+							<th>Price per item</th>
+							<th>Remove</th>
+						</tr>
+					</thead>
+                    {{#each products}}
+					<tr class="rem1">
+						<td class="invert">{{@index}}</td>
+						<td class="invert-image"><a href="#"><img src="images/{{this.item}}.jpg" alt=" " class="img-responsive" /></a></td>
+						<td class="invert">
+                            <button class="cart-change-buttons"
+                            onclick="changeProductQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',-1)">-</button>
+                        <span id="{{this.product._id}}">{{this.quantity}}</span>
+                        <button class="cart-change-buttons"
+                            onclick="changeProductQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',1)">+</button>
+						</td>
+						<td class="invert">{{this.product.name}}</td>
+						<td class="invert">{{this.product.price}}</td>
+						<td class="invert">
+							<div class="rem">
+								<div class="close1" onclick="removeProduct('{{this._id}}','{{this.product._id}}')">
+
+                                </div>
+							</div>
+						</td>
+					</tr>
+                    {{/each}}
+				</table>
+			</div>
+			<div class="checkout-left">	
+				<div class="checkout-left-basket float-right">
+					{{#if proLength}}
+                    <a href='/place-order'><h4>Place Order</h4></a>
+                    {{/if}}
+				</div>
+				<div class="checkout-right-basket">
+					<a href="/"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Continue Shopping</a>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+<!-- //checkout -->
+
+
+
+
+
+
+
+
+
+<script>
+    async function changeProductQuantity(cartId, prodId,userId, count) {
+        quantity = parseInt(document.getElementById(prodId).innerHTML)
+        count = parseInt(count)
+        let response = await fetch('/change-product-quantity', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId,cartId, prodId, count, quantity
+            })
+        })
+        let data = await response.json()
+        if (data.updated) {
+                document.getElementById(prodId).innerHTML = quantity + count
+                document.getElementById('total-price').innerHTML = data.total
+                
+        } else {
+            alert('Product removed from cart')
+            location.reload()
+        }
+    }
+    async function removeProduct(cartId, prodId) {
+        let response = await fetch('/remove-product', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ cartId, prodId })
+        })
+        let data = await response.json()
+        if (data.removed) {
+            alert('Product removed from cart')
+            location.reload()
+        }
+    }
+</script>
