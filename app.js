@@ -11,6 +11,8 @@ var fileUpload = require('express-fileupload')
 var adminRouter = require('./routes/admin');
 var session = require('express-session')
 var db = require('./config/connection')
+
+
 var app = express();
 
 // view engine setup
