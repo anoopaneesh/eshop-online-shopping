@@ -46,8 +46,8 @@
 </form>
 </div>
 <script>
-    let formObj =document.getElementById('place-order-form')
-    formObj.addEventListener('submit',async(e)=>{
+    let formObj = document.getElementById('place-order-form')
+    formObj.addEventListener('submit', async (e) => {
         e.preventDefault()
         let formData = new FormData(formObj)
         let result = await fetch('/place-order', {
@@ -64,21 +64,21 @@
         }
 
     })
-    async function verifyPayment(payment,order){
-        let res = await fetch('/verify-payment',{
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json'
+    async function verifyPayment(payment, order) {
+        let res = await fetch('/verify-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            body:JSON.stringify({
+            body: JSON.stringify({
                 payment,
                 order
             })
         })
         let result = await res.json()
-        if(result.status){
-            location.href="/order-placed"
-        }else{
+        if (result.status) {
+            location.href = "/order-placed"
+        } else {
             alert('Payment was not successfull')
         }
     }
@@ -93,7 +93,7 @@
             "image": "https://example.com/your_logo",
             "order_id": data.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
             "handler": function (response) {
-                verifyPayment(response,data)
+                verifyPayment(response, data)
             },
             "prefill": {
                 "name": "Gaurav Kumar",
@@ -110,5 +110,5 @@
         var rzp1 = new Razorpay(options);
         rzp1.open()
     }
-    
+
 </script>

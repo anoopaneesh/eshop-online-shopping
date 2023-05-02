@@ -246,94 +246,94 @@ module.exports = {
     },
     getAllOrders: (userId) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.ORDER_COLLECTION).find({ user: objectId(userId)}).toArray().then((response) => {
+            db.get().collection(collection.ORDER_COLLECTION).find({ user: objectId(userId) }).toArray().then((response) => {
                 let orders = []
-                response.map((e)=>{
-                    e.date = e.date.toLocaleString(undefined, {timeZone: 'Asia/Kolkata'})
+                response.map((e) => {
+                    e.date = e.date.toLocaleString(undefined, { timeZone: 'Asia/Kolkata' })
                     orders.push(e)
                 })
                 resolve(orders)
             })
         })
     },
-    getOrderDetails:(userId,orderId)=>{
-        return new Promise((resolve,reject)=>{
+    getOrderDetails: (userId, orderId) => {
+        return new Promise((resolve, reject) => {
             db.get().collection(collection.ORDER_COLLECTION).aggregate([
                 {
-                    $match:{user:objectId(userId),_id:objectId(orderId)}
+                    $match: { user: objectId(userId), _id: objectId(orderId) }
                 },
                 {
-                    $unwind:'$products'
+                    $unwind: '$products'
                 },
                 {
-                    $lookup:{
-                        from:collection.PRODUCT_COLLECTION,
-                        localField:'products.item',
-                        foreignField:'_id',
-                        as:'product'
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTION,
+                        localField: 'products.item',
+                        foreignField: '_id',
+                        as: 'product'
                     }
                 },
                 {
-                   $project:{
-                       quantity:'$products.quantity',
-                       total:1,
-                       product:{$arrayElemAt:['$product',0]}
-                   } 
+                    $project: {
+                        quantity: '$products.quantity',
+                        total: 1,
+                        product: { $arrayElemAt: ['$product', 0] }
+                    }
                 },
                 {
-                    $group:{
-                        _id:'$_id',
-                        total:{$first:'$total'},
-                        item:{
-                            $push:{
-                                product:'$product',
-                                quantity:'$quantity'
+                    $group: {
+                        _id: '$_id',
+                        total: { $first: '$total' },
+                        item: {
+                            $push: {
+                                product: '$product',
+                                quantity: '$quantity'
                             }
                         }
                     }
                 }
-            ]).toArray().then((response)=>{
-                    resolve(response)
+            ]).toArray().then((response) => {
+                resolve(response)
 
             })
         })
     },
-    generateRazorpay:(orderId,total)=>{
-        return new Promise((resolve,reject)=>{
+    generateRazorpay: (orderId, total) => {
+        return new Promise((resolve, reject) => {
             var options = {
-                amount: total*100,  // amount in the smallest currency unit
+                amount: total * 100,  // amount in the smallest currency unit
                 currency: "INR",
-                receipt: ""+orderId
-              };
-              instance.orders.create(options, function(err, order) {
-                  if(err){
-                      console.log(err)
-                  }else{
+                receipt: "" + orderId
+            };
+            instance.orders.create(options, function (err, order) {
+                if (err) {
+                    console.log(err)
+                } else {
                     resolve(order)
-                  }
-              });
+                }
+            });
         })
     },
-    verifyPayment:(order)=>{
-        return new Promise((resolve,reject)=>{
+    verifyPayment: (order) => {
+        return new Promise((resolve, reject) => {
             var crypto = require('crypto');
-            var hmac = crypto.createHmac('sha256',keys.key_secret);
-            hmac.update(order.order.id+"|"+order.payment['razorpay_payment_id'])
+            var hmac = crypto.createHmac('sha256', keys.key_secret);
+            hmac.update(order.order.id + "|" + order.payment['razorpay_payment_id'])
             hmac = hmac.digest('hex')
-            if(hmac === order.payment['razorpay_signature']){
+            if (hmac === order.payment['razorpay_signature']) {
                 resolve()
-            }else{
+            } else {
                 reject()
             }
         })
     },
-    changeOrderStatus:(orderId) =>{
-        return new Promise((resolve,reject)=>{
-            db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:objectId(orderId)},{
-                $set:{
-                    status:'placed'
+    changeOrderStatus: (orderId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ORDER_COLLECTION).updateOne({ _id: objectId(orderId) }, {
+                $set: {
+                    status: 'placed'
                 }
-            }).then(()=>{
+            }).then(() => {
                 resolve()
             })
         })

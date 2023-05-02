@@ -1,43 +1,45 @@
-    <!-- banner -->
-	<div class="banner">
-		
-	</div>
+<!-- banner -->
+<div class="banner">
+
+</div>
 <!-- //banner -->
 <!-- collections -->
-	<div class="new-collections">
-		<div class="container">
-			<h3 class="animated wow zoomIn" data-wow-delay=".5s">Our Products</h3>
-			<p class="est animated wow zoomIn" data-wow-delay=".5s">Latest smartphones at low price</p>
-			<div class="new-collections-grids">
-                {{#each products}}
-				<div class="col-md-3 new-collections-grid">
-					<div class="new-collections-grid1 animated wow slideInUp" data-wow-delay=".5s">
-						<div class="new-collections-grid1-image">
-							<a href="#" class="product-image"><img src="/images/{{this._id}}.jpg" style="height:200px;" alt=" " class="img-responsive" /></a>
-							<div class="new-collections-grid1-image-pos">
-								<a href="#">Quick View</a>
-							</div>
-						</div>
-						<h4><a href="#">{{this.name}}</a></h4>
-						<p>{{this.description}}</p>
-						<div class="new-collections-grid1-left simpleCart_shelfItem">
-							<p><span class="item_price">Rs.{{this.price}}</span><button class="button_add_to_cart" onclick="addToCart('{{this._id}}')">add to cart </button></p>
+<div class="new-collections">
+	<div class="container">
+		<h3 class="animated wow zoomIn" data-wow-delay=".5s">Our Products</h3>
+		<p class="est animated wow zoomIn" data-wow-delay=".5s">Latest smartphones at low price</p>
+		<div class="new-collections-grids">
+			{{#each products}}
+			<div class="col-md-3 new-collections-grid">
+				<div class="new-collections-grid1 animated wow slideInUp" data-wow-delay=".5s">
+					<div class="new-collections-grid1-image">
+						<a href="#" class="product-image"><img src="/images/{{this._id}}.jpg" style="height:200px;"
+								alt=" " class="img-responsive" /></a>
+						<div class="new-collections-grid1-image-pos">
+							<a href="#">Quick View</a>
 						</div>
 					</div>
+					<h4><a href="#">{{this.name}}</a></h4>
+					<p>{{this.description}}</p>
+					<div class="new-collections-grid1-left simpleCart_shelfItem">
+						<p><span class="item_price">Rs.{{this.price}}</span><button class="button_add_to_cart"
+								onclick="addToCart('{{this._id}}')">add to cart </button></p>
+					</div>
 				</div>
-                {{/each}}
-				<div class="clearfix"> </div>
 			</div>
+			{{/each}}
+			<div class="clearfix"> </div>
 		</div>
 	</div>
+</div>
 <!-- //collections -->
 <script>
-    async function addToCart(prodId){
-        let response = await fetch(`/add-to-cart/${prodId}`)
-        let data = await response.json()
-        if(data.status){
-            let count = parseInt(document.getElementById('cart-badge').innerHTML)
-            document.getElementById('cart-badge').innerHTML = count +1
-        }
-    }
+	async function addToCart(prodId) {
+		let response = await fetch(`/add-to-cart/${prodId}`)
+		let data = await response.json()
+		if (data.status) {
+			let count = parseInt(document.getElementById('cart-badge').innerHTML)
+			document.getElementById('cart-badge').innerHTML = count + 1
+		}
+	}
 </script>
